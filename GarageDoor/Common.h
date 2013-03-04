@@ -23,7 +23,7 @@ void tweet(char* msg){
     client.print("Authorization: Basic ");
     client.println(auth);
     client.println("Content-type: application/x-www-form-urlencoded");
-    client.print("Content-length: ");  
+    client.print("Content-length: ");	
     client.println(9+strlen(msg)+10);				
     client.println("Connection: Close");
     client.println();
@@ -207,3 +207,4 @@ void rightStatus() {
 }
 
 #endif
+

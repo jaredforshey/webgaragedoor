@@ -49,7 +49,7 @@ boolean readPOSTparam(char *name, int nameLen, char *value, int valueLen, WiFlyC
       if (ch1 == -1 || ch2 == -1)
         return false;
       char hex[3] = { 
-        ch1, ch2, 0                         };
+        ch1, ch2, 0                                                 };
       ch = strtoul(hex, NULL, 16);
     }
 
@@ -158,6 +158,12 @@ void processConnection(){
     bool repeat;
 
     while (client.connected()) {
+      if (millis() >= 60000 * timesAround){
+        Serial.print(millis() / 60000);
+        Serial.println(" minutes have elapsed since power up");
+
+        timesAround++;
+      }
       if (client.available()) {
         char c;
         iConnectionDelayLimit=0;
@@ -168,8 +174,15 @@ void processConnection(){
         if (message.length() < 30)
           message.concat(c);
 
-        if (message.indexOf("favicon")>-1)
+        if (message.indexOf("Disconn from") > -1) {
+          Serial.println("Disconnection found");
           break;
+        }
+          
+        if (message.indexOf("favicon")>-1) {
+          Serial.println("favicon");
+          break;
+        }
 
         if (c == '\n' && current_line_is_blank) {
           Serial.print(message.substring(0,22)); 
@@ -260,34 +273,16 @@ void processConnection(){
     Serial.println("Stopping");
     client.stop();
     Serial.println("Stopped");
-  } // End of "if(client)
-  //  else {
-  //    if (millis() >= 60000 * timesAround){
-  ////      Serial.println("");
-  //      Serial.print(millis() / 60000);
-  //      Serial.println(" minutes have elapsed since power up");
-  ////      
-  ////      if (!WiFly.getConnectionStatus()){
-  ////        //Serial.println("***********************************************");
-  ////        Serial.println("Not connected!!!");
-  ////        JoinRouter();
-  //////          Serial.println("***********************************************");
-  //////          
-  //////          InitializeWiFly();
-  //////          delay(5000);
-  ////      }
-  ////      else
-  ////        Serial.println("Connected!!!");
-  ////        
-  //      timesAround++;
-  //    }
-  //  }
+  } // End of "if(client)"
+
+  if (millis() >= 60000 * timesAround){
+    Serial.print(millis() / 60000);
+    Serial.println(" minutes have elapsed since power up 2");
+
+    timesAround++;
+  }
+
 }
-
-
-
-
-
 
 
 void WiFlySetup(){
@@ -298,15 +293,21 @@ void WiFlySetup(){
 
   WiFly.begin();
 
+//This will set up automatic joining of your network using the credentials in Credentials.h
+//You only need to do this once, the information will be stored in memory, even after you reboot
 #if WIFLY_RECONFIGURATE == 1
   WiFly.setWiFiConfiguration(ssid, passphrase);
 #endif
 
   server.begin();
-
-  WiFly.join(ssid, passphrase);
-
-  //setTime(0,0,0,9,2,2013);
 }
 
 #endif
+
+
+
+
+
+
+
+

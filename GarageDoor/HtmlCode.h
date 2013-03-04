@@ -26,12 +26,11 @@ const  prog_uchar htmlHeader[] PROGMEM ="<!DOCTYPE html PUBLIC '-//W3C//DTD XHTM
        "function login() {"
                         "$('#loginSubmit').hide();"
                         "$('#loginCounter').hide();"
-  		"loginSubmit.style.display = 'none';"
+			"loginSubmit.style.display = 'none';"
 			"waitingfront.style.display = 'inline';"
 			"encode();"
 			"$('#pwdInput').val('');"
 			"loginPost();"
-			//
        "}"
 		"function loginPost() {"
 			"var repeatCount = 0;"
@@ -304,4 +303,5 @@ const  prog_uchar messageEnd[] PROGMEM = "</div>"
   "</div>"
 "</body>"
 "</html>";
+
 

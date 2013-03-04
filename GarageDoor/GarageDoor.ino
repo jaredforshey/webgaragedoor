@@ -3,25 +3,18 @@
 //                          DIRECTIVES
 //
 //***********************************************************************
-#define SHIELD_TYPE 1
+#define SHIELD_TYPE 0
 // ETHERNET = 0
 // WIFLY = 1
 // WIFI = 2
 
-#define DOOR_SENSOR_TYPE 1 //Jared, Peter: Change this to a 0 on yours.
+#define DOOR_SENSOR_TYPE 0 //Jared, Peter: Change this to a 0 on yours.
 // 0:digital
 // 1:analog
 
 #define CRLF "\r\n"
-#define TWEETING_ENABLED 0 //Jared, Peter: Change this to a 1 on yours.
 #define WIFLY_RECONFIGURATE 0 //Set to 1 to re-confiure the WiFly Shield with different credentials. 
 //Set to 0 to use the internally stored credentials.
-
-
-
-
-
-
 
 //***********************************************************************
 //
@@ -30,7 +23,7 @@
 //***********************************************************************
 //Left door = the only door in a 1 door config
 //SET THIS TO HOW MANY DOORS YOU HAVE.  CURRENTLY SUPPORTS 1 OR 2
-static int doors = 1;
+static int doors = 2;
 
 boolean DoorOpen = false;
 boolean DoorClosed = false;
@@ -72,17 +65,16 @@ int loginattempt = 0; //login attempt counter
 
 #if SHIELD_TYPE == 0
 // Ethernet Shield used
-//#include "Ethernet.h"
-//#include "EthernetDNS.h"
-//#include "WebServer.h"
-//#include "NTP.h"
+#include "Ethernet.h"
+#include "WebServer.h"
+#include "SPI.h"
+//#include "SD.h"
 #include "EthernetSpecific.h"
 #elif SHIELD_TYPE == 1
 // Wifly Shield
 #include <SPI.h>
 #include <string.h>
 #include <Time.h>
-#include "Common.h"
 #include "HtmlCode.h"
 #include "WiFly.h"
 #include "WiFlySpecific.h"
@@ -133,18 +125,9 @@ void processCommands() {
   //Serial.print("  <--Left  Right-->  ");
   //Serial.println(rightState);
   if (leftState == 100) { //JARED whole funtion
-    if (doors != 2)
-    {
-      tweet("Door Error @ "); 
-    } 
-    else 
-    {
-      tweet("Left Door Error @ "); 
-    }
     activateDoor(&leftState, 3, &leftStateTimer, DoorClosed, DoorOpen, ledPin); //clear error
   }
   if (rightState == 100) { //JARED whole function
-    tweet("Right Door Error @ ");
     activateDoor(&rightState, 3, &rightStateTimer, Door2Closed, Door2Open, ledPin2); //clear error
   }
 }
@@ -275,6 +258,5 @@ void loop() {
 
   processCommands();
 }
-
 
 

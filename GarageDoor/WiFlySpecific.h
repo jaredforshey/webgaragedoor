@@ -68,13 +68,6 @@ boolean readPOSTparam(char *name, int nameLen, char *value, int valueLen, WiFlyC
       *value++ = ch;
       --valueLen;
     }
-
-    Serial.println("");
-    Serial.print("name=");
-    Serial.println(name);
-
-    Serial.print("value=");
-    Serial.println(value);
   }
 
   // if we get here, we hit the end-of-file, so POST is over and there
@@ -185,23 +178,12 @@ void processConnection(){
         }
 
         if (c == '\n' && current_line_is_blank) {
-          Serial.print(message.substring(0,22)); 
+          Serial.print(message.substring(0,message.length()-1)); 
 
           if(message.indexOf("GET")>-1){
             client.printP(httpHeader);
             client.printP(htmlHeader);
-            client.printP(message1);
-
-            if (doors != 2) {
-              client.printP(statusbuttons);
-              client.printP(OneDoorStatus);
-            }
-            else {
-              client.printP(statusbuttonsTWO);
-              client.printP(StatusLeft);
-              client.printP(StatusRight);
-            }
-
+           
             client.printP(messageEnd);
             Serial.println("messageEnd done");
             break;
@@ -303,11 +285,3 @@ void WiFlySetup(){
 }
 
 #endif
-
-
-
-
-
-
-
-

@@ -4,5 +4,5 @@ webgaragedoor
 Internet garage door opener
 
 
-WiFly Library Used:
+Loose base of the WiFly Library used:
 https://github.com/sparkfun/WiFly-Shield

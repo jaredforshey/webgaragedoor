@@ -136,11 +136,9 @@ void doorCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
   {
     /* for a GET or HEAD, send the standard "it's all OK headers" */
     server.httpSuccess();
-    P(message) = htmlHeader;
-    server.printP(message);
+    server.printP(htmlHeader);
     server.print(doors);
-    P(message2) = messageEnd;
-    server.printP(message2);
+    server.printP(messageEnd);
   }
 }
 //*****************************END OF DEFAULT WEB SERVER CMD************************************

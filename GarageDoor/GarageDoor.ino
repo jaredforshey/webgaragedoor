@@ -62,6 +62,7 @@ int loginattempt = 0; //login attempt counter
 // Decide which Shield Code to load  
 #include "Credentials.h"
 #include "Common.h"
+#include "HtmlCode.h"
 
 #if SHIELD_TYPE == 0
 // Ethernet Shield used
@@ -75,7 +76,6 @@ int loginattempt = 0; //login attempt counter
 #include <SPI.h>
 #include <string.h>
 #include <Time.h>
-#include "HtmlCode.h"
 #include "WiFly.h"
 #include "WiFlySpecific.h"
 

@@ -142,7 +142,7 @@ void doorCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
       "<head>"
       "<title>Web Garage Door</title>"
       "<meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' />"
-      "<meta name='apple-touch-fullscreen' content='YES' />"
+      "<meta name=apple-mobile-web-app-capable' content='yes'>"
       "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>"
       "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js'></script>"
       "<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/dot-luv/jquery-ui.css' />"

@@ -4,8 +4,6 @@ var door2Content = "<br /><button style='width: 129px; height: 40px; display: in
 var footer = "</div></div></div></div>";
 var pwd = '';
 
-
-
 $(function () {
 var content = "<div id='wrapper' class='body'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Error</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><div id='loginCounter' class='ui-widget'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Arduino Config Error!</strong></p></div></div></div></div></div>";
 if (doors == 1)
@@ -17,10 +15,26 @@ content = header + door2Content + footer;
 }
 $('#page').append(content);
 $('button').button(); 
-$('#tabs').tabs(); 
+$('#tabs').tabs();
+$('#pwdInput').bind('keypress', function (e) {
+    var code = (e.keyCode ? e.keyCode : e.which);
+    if (code == 13) { //Enter keycode
+        login();
+    }
+});
 showlogin(); }); 
 
-function login() { encode(); $('#pwdInput').val(''); $.post('/door', { cmd: '8', pwd: pwd }, function (data) { passfail(data); }); } 
+function login() {
+	$('#loginSubmit').attr('disabled','disabled').hide();
+    //encode();
+    //$('#pwdInput').val('');
+    //$.post('/door', {
+    //    cmd: '8',
+    //    pwd: pwd
+    //}, function (data) {
+    //    passfail(data);
+    //});
+}
 
 function passfail(xml) {
     var pass = 'test';
@@ -45,22 +59,130 @@ function passfail(xml) {
     }
 }
 
-function showlogin() { $('#loginPage').show(); $('#pwdInput').focus(); } 
+function showlogin() {
+    $('#loginPage').show();
+    $('#pwdInput').focus();
+}
 
-function encode() { var input = $('#pwdInput').val(); var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/='; var output = ''; var chr1, chr2, chr3, enc1, enc2, enc3, enc4; var i = 0; while (i < input.length) { chr1 = input.charCodeAt(i++); chr2 = input.charCodeAt(i++); chr3 = input.charCodeAt(i++); enc1 = chr1 >> 2; enc2 = ((chr1 & 3) << 4) | (chr2 >> 4); enc3 = ((chr2 & 15) << 2) | (chr3 >> 6); enc4 = chr3 & 63; if (isNaN(chr2)) { enc3 = enc4 = 64; } else if (isNaN(chr3)) { enc4 = 64; } output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4); } pwd = output; } 
+function encode() {
+    var input = $('#pwdInput').val();
+    var _keyStr = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=';
+    var output = '';
+    var chr1, chr2, chr3, enc1, enc2, enc3, enc4;
+    var i = 0;
+    while (i < input.length) {
+        chr1 = input.charCodeAt(i++);
+        chr2 = input.charCodeAt(i++);
+        chr3 = input.charCodeAt(i++);
+        enc1 = chr1 >> 2;
+        enc2 = ((chr1 & 3) << 4) | (chr2 >> 4);
+        enc3 = ((chr2 & 15) << 2) | (chr3 >> 6);
+        enc4 = chr3 & 63;
+        if (isNaN(chr2)) {
+            enc3 = enc4 = 64;
+        } else if (isNaN(chr3)) {
+            enc4 = 64;
+        }
+        output = output + _keyStr.charAt(enc1) + _keyStr.charAt(enc2) + _keyStr.charAt(enc3) + _keyStr.charAt(enc4);
+    }
+    pwd = output;
+}
 
-function process(xml) { $('#leftopen').hide(); $('#leftclosed').hide(); $('#leftunknown').hide(); $('#rightopen').hide(); $('#rightclosed').hide(); $('#rightunknown').hide(); var leftstatus = 0; var rightstatus = 0; $(xml).find('left').each(function () { leftstatus = $(this).text(); }); $(xml).find('right').each(function () { rightstatus = $(this).text(); }); if (leftstatus == 'open') { $('#leftopen').show(); } if (leftstatus == 'closed') { $('#leftclosed').show(); } if (leftstatus == 'unknown') { $('#leftunknown').show(); } if (rightstatus == 'open') { $('#rightopen').show(); } if (rightstatus == 'closed') { $('#rightclosed').show(); } if (rightstatus == 'unknown') { $('#rightunknown').show(); } } 
+function process(xml) {
+    $('#leftopen').hide();
+    $('#leftclosed').hide();
+    $('#leftunknown').hide();
+    $('#rightopen').hide();
+    $('#rightclosed').hide();
+    $('#rightunknown').hide();
+    var leftstatus = 0;
+    var rightstatus = 0;
+    $(xml).find('left').each(function () {
+        leftstatus = $(this).text();
+    });
+    $(xml).find('right').each(function () {
+        rightstatus = $(this).text();
+    });
+    if (leftstatus == 'open') {
+        $('#leftopen').show();
+    }
+    if (leftstatus == 'closed') {
+        $('#leftclosed').show();
+    }
+    if (leftstatus == 'unknown') {
+        $('#leftunknown').show();
+    }
+    if (rightstatus == 'open') {
+        $('#rightopen').show();
+    }
+    if (rightstatus == 'closed') {
+        $('#rightclosed').show();
+    }
+    if (rightstatus == 'unknown') {
+        $('#rightunknown').show();
+    }
+}
 
-function status() { window.scrollTo(0, 1); $.post('/door', { cmd: '7', pwd: pwd }, function (data) { process(data); }); }
+function status() {
+    window.scrollTo(0, 1);
+    $.post('/door', {
+        cmd: '7',
+        pwd: pwd
+    }, function (data) {
+        process(data);
+    });
+}
 
-function OpenDoor() { if (confirm('Open door?')) { $.post('/door', { cmd: '1', pwd: pwd }); } } 
+function OpenDoor() {
+    if (confirm('Open door?')) {
+        $.post('/door', {
+            cmd: '1',
+            pwd: pwd
+        });
+    }
+}
 
-function CloseDoor() { if (confirm('Close door?')) { $.post('/door', { cmd: '2', pwd: pwd }); } } 
+function CloseDoor() {
+    if (confirm('Close door?')) {
+        $.post('/door', {
+            cmd: '2',
+            pwd: pwd
+        });
+    }
+}
 
-function ActuateDoor() { if (confirm('Toggle door?')) { $.post('/door', { cmd: '3', pwd: pwd }); } } 
+function ActuateDoor() {
+    if (confirm('Toggle door?')) {
+        $.post('/door', {
+            cmd: '3',
+            pwd: pwd
+        });
+    }
+}
 
-function OpenDoor2() { if (confirm('Open door?')) { $.post('/door', { cmd: '4', pwd: pwd }); } } 
+function OpenDoor2() {
+    if (confirm('Open door?')) {
+        $.post('/door', {
+            cmd: '4',
+            pwd: pwd
+        });
+    }
+}
 
-function CloseDoor2() { if (confirm('Close door?')) { $.post('/door', { cmd: '5', pwd: pwd }); } } 
+function CloseDoor2() {
+    if (confirm('Close door?')) {
+        $.post('/door', {
+            cmd: '5',
+            pwd: pwd
+        });
+    }
+}
 
-function ActuateDoor2() { if (confirm('Toggle door?')) { $.post('/door', { cmd: '6', pwd: pwd }); } }
+function ActuateDoor2() {
+    if (confirm('Toggle door?')) {
+        $.post('/door', {
+            cmd: '6',
+            pwd: pwd
+        });
+    }
+}

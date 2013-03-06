@@ -183,7 +183,7 @@ void processConnection(){
           if(message.indexOf("GET")>-1){
             client.printP(httpHeader);
             client.printP(htmlHeader);
-           
+            client.print(doors);
             client.printP(messageEnd);
             Serial.println("messageEnd done");
             break;

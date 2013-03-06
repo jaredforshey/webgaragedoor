@@ -26,14 +26,14 @@ showlogin(); });
 
 function login() {
 	$('#loginSubmit').attr('disabled','disabled').hide();
-    //encode();
-    //$('#pwdInput').val('');
-    //$.post('/door', {
-    //    cmd: '8',
-    //    pwd: pwd
-    //}, function (data) {
-    //    passfail(data);
-    //});
+	encode();
+	$('#pwdInput').val('');
+	$.post('/door', {
+	   cmd: '8',
+	   pwd: pwd
+	}, function (data) {
+	   passfail(data);
+	});
 }
 
 function passfail(xml) {

@@ -12,8 +12,8 @@ WebServer webserver(PREFIX, 80);
 //*****************************DEFAULT WEB SERVER CMD************************************
 void doorCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
 {
-  
-  
+
+
   if (type == WebServer::POST)
   {
 
@@ -136,31 +136,10 @@ void doorCmd(WebServer &server, WebServer::ConnectionType type, char *, bool)
   {
     /* for a GET or HEAD, send the standard "it's all OK headers" */
     server.httpSuccess();
-    P(message) = 
-      "<!DOCTYPE html>"
-      "<html>"
-      "<head>"
-      "<title>Web Garage Door</title>"
-      "<meta name='viewport' content='width=device-width; initial-scale=1.0; maximum-scale=1.0; user-scalable=0;' />"
-      "<meta name=apple-mobile-web-app-capable' content='yes'>"
-      "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>"
-      "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js'></script>"
-      "<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/dot-luv/jquery-ui.css' />"
-      "<script type='text/javascript'>var doors=";
-      server.printP(message);
-      server.print(doors);
-      P(message2) = 
-      ";</script>"
-      "<script src='http://ROV2776/WebGarageDoor/js/main.js' type='text/javascript'></script>"
-      "<style type='text/css'>"
-      "#slider{margin: 10px;}"
-      ".body{vertical-align: top;text-align: center;color: White;margin: 0 auto;border: 1px solid white;}"
-      "#wrapper{width: 305px;height: 400px;border: none;margin: 0 auto;}"
-      "</style>"
-      "</head>"
-      "<body id='page' style='font-size: 62.5%; background-color: #5F5A59;' onload='setTimeout(function() { window.scrollTo(0, 1) }, 100);' >"
-      "</body>"
-      "</html>";
+    P(message) = htmlHeader;
+    server.printP(message);
+    server.print(doors);
+    P(message2) = messageEnd;
     server.printP(message2);
   }
 }
@@ -176,3 +155,4 @@ void EthernetSetup(){
   webserver.begin();
 }
 #endif
+

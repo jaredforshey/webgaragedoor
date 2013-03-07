@@ -1,11 +1,11 @@
-var header = "<div id='wrapper' class='body'><div id='loginPage'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Login</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><input type='password' id='pwdInput'></input><br /><br /><button id='loginSubmit' onclick='javascript:login();'>Authenticate</button><br /><br /><div id='loginCounter' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Door Partially Open!</strong></p></div></div></div></div></div><div id='bodyPage' style='display: none'><button id='refresh' onclick='javascript:status();'>Refresh</button><br /><br /><div id='tabs'><ul><li><a href='#tabs-1'>Controls</a></li></ul><div id='tabs-1'>";
+var header = "<div id='wrapper' class='body'><div id='loginPage'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Login</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><input type='password' id='pwdInput'></input><br /><br /><button id='loginSubmit' style='display: inline' onclick='javascript:login();'>Authenticate</button><br /><br /><div id='loginCounter' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Door Partially Open!</strong></p></div></div></div></div></div><div id='bodyPage' style='display: none'><button id='refresh' onclick='javascript:status();'>Refresh</button><br /><br /><div id='tabs'><ul><li><a href='#tabs-1'>Controls</a></li></ul><div id='tabs-1'>";
 var door1Content = "<br /><button style='width: 145px; height: 40px;' id='opendoor' onclick='javascript:OpenDoor();'>Open Door</button><br /><button style='width: 145px; height: 40px; margin-top: 4px;' id='closedoor' onclick='javascript:CloseDoor();'>Close Door</button><br /><button style='width: 145px; height: 40px; margin-top: 4px;' id='actuate' onclick='javascript:ActuateDoor();'>Actuate Door</button><br /><br /><hr /><br /><div id='leftopen' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Door Open!</strong></p></div></div><div id='leftclosed' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-highlight ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span><strong>Door Closed.</strong></p></div></div><div id='leftunknown' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Door Partially Open!</strong></p></div></div>"
 var door2Content = "<br /><button style='width: 129px; height: 40px; display: inline' id='opendoor' onclick='javascript:OpenDoor();'>Open Left</button><button style='width: 129px; height: 40px; display: inline' id='opendoor2' onclick='javascript:OpenDoor2();'>Open Right</button><br /><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='closedoor'onclick='javascript:CloseDoor();'>Close Left</button><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='closedoor2'onclick='javascript:CloseDoor2();'>Close Right</button><br /><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='actuate'onclick='javascript:ActuateDoor();'>Run Left</button><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='actuate2'onclick='javascript:ActuateDoor2();'>Run Right</button><br /><br /><hr /><br /><div id='leftopen' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Left Door Open!</strong></p></div></div><div id='leftclosed' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-highlight ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span><strong>Left Door Closed.</strong></p></div></div><div id='leftunknown' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Left Door Partially Open!</strong></p></div></div><br /><div id='rightopen' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Right Door Open!</strong></p></div></div><div id='rightclosed' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-highlight ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span><strong>Right Door Closed.</strong></p></div></div><div id='rightunknown' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Right Door Partially Open!</strong></p></div></div>"
 var footer = "</div></div></div></div>";
 var pwd = '';
 
 $(function () {
-var content = "<div id='wrapper' class='body'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Error</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><div id='loginCounter' class='ui-widget'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Arduino Config Error!</strong></p></div></div></div></div></div>";
+var content = "<div id='wrapper' class='body'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Error</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><div id='loginCounter' class='ui-widget' style='display: inline'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Arduino Config Error!</strong></p></div></div></div></div></div>";
 if (doors == 1)
 {
 content = header + door1Content + footer;
@@ -25,7 +25,9 @@ $('#pwdInput').bind('keypress', function (e) {
 showlogin(); }); 
 
 function login() {
-	$('#loginSubmit').attr('disabled','disabled').hide();
+	//loginSubmit.style.visibility = 'hidden';
+	$('#loginCounter strong').text('Checking Password'); 
+	$('#loginCounter').show();
 	encode();
 	$('#pwdInput').val('');
 	$.post('/door', {
@@ -33,7 +35,9 @@ function login() {
 	   pwd: pwd
 	}, function (data) {
 	   passfail(data);
+	   //loginSubmit.style.visibility = 'visible';
 	});
+	
 }
 
 function passfail(xml) {
@@ -124,13 +128,16 @@ function process(xml) {
 }
 
 function status() {
+	refresh.style.visibility = 'hidden';
     window.scrollTo(0, 1);
     $.post('/door', {
         cmd: '7',
         pwd: pwd
     }, function (data) {
         process(data);
+		refresh.style.visibility = 'visible';
     });
+	
 }
 
 function OpenDoor() {

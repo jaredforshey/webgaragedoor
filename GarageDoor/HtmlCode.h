@@ -8,6 +8,7 @@ const  prog_uchar htmlHeader[] PROGMEM = "<!DOCTYPE html>"
       "<meta name=apple-mobile-web-app-capable' content='yes'>"
       "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js'></script>"
       "<script type='text/javascript' src='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/jquery-ui.min.js'></script>"
+      "<script type='text/javascript' src='http://fgnass.github.com/spin.js/dist/spin.js'></script>"
       "<link rel='stylesheet' href='http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.2/themes/dot-luv/jquery-ui.css' />"
       "<script type='text/javascript'>var doors=";
 const  prog_uchar messageEnd[] PROGMEM = ";</script>"

@@ -3,7 +3,45 @@ var door1Content = "<br /><button style='width: 145px; height: 40px;' id='opendo
 var door2Content = "<br /><button style='width: 129px; height: 40px; display: inline' id='opendoor' onclick='javascript:OpenDoor();'>Open Left</button><button style='width: 129px; height: 40px; display: inline' id='opendoor2' onclick='javascript:OpenDoor2();'>Open Right</button><br /><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='closedoor'onclick='javascript:CloseDoor();'>Close Left</button><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='closedoor2'onclick='javascript:CloseDoor2();'>Close Right</button><br /><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='actuate'onclick='javascript:ActuateDoor();'>Run Left</button><button style='width: 129px; height: 40px; margin-top: 4px; display: inline' id='actuate2'onclick='javascript:ActuateDoor2();'>Run Right</button><br /><br /><hr /><br /><div id='leftopen' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Left Door Open!</strong></p></div></div><div id='leftclosed' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-highlight ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span><strong>Left Door Closed.</strong></p></div></div><div id='leftunknown' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Left Door Partially Open!</strong></p></div></div><br /><div id='rightopen' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Right Door Open!</strong></p></div></div><div id='rightclosed' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-highlight ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-info' style='float: left; margin-right: .3em;'></span><strong>Right Door Closed.</strong></p></div></div><div id='rightunknown' onmousedown='javascript:status();' class='ui-widget' style='display: none'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Right Door Partially Open!</strong></p></div></div>"
 var footer = "</div></div></div></div>";
 var pwd = '';
+var loginTarget = '';	
+var refreshTarget = '';	
+var loginSpinner = '';
+var refreshSpinner = '';
 
+var loginOpts = {
+  lines: 10, // The number of lines to draw 
+  length: 5, // The length of each line
+  width: 4, // The line thickness
+  radius: 5, // The radius of the inner circle
+  rotate: 0, // The rotation offset
+  color: '#FFF', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: '110' // Left position relative to parent in px
+};
+
+var refreshOpts = {
+  lines: 9, // The number of lines to draw 
+  length: 4, // The length of each line
+  width: 4, // The line thickness
+  radius: 5, // The radius of the inner circle
+  rotate: 0, // The rotation offset
+  color: '#FFF', // #rgb or #rrggbb
+  speed: 1, // Rounds per second
+  trail: 60, // Afterglow percentage
+  shadow: false, // Whether to render a shadow
+  hwaccel: false, // Whether to use hardware acceleration
+  className: 'spinner', // The CSS class to assign to the spinner
+  zIndex: 2e9, // The z-index (defaults to 2000000000)
+  top: 'auto', // Top position relative to parent in px
+  left: '80' // Left position relative to parent in px
+};
+  
 $(function () {
 var content = "<div id='wrapper' class='body'><div class='ui-widget ui-corner-all ui-widget-content'><div class='ui-widget ui-corner-all ui-widget-header' style='height: 30px;'><div class='ui-datepicker-month'>Error</div></div><div style='padding-bottom: 13px; padding-left: 18px; padding-right: 18px; padding-top: 13px;'><div id='loginCounter' class='ui-widget' style='display: inline'><div class='ui-state-error ui-corner-all' style='padding: 0 .7em;'><p><span class='ui-icon ui-icon-alert' style='float: left; margin-right: .3em;'></span><strong>Arduino Config Error!</strong></p></div></div></div></div></div>";
 if (doors == 1)
@@ -24,10 +62,13 @@ $('#pwdInput').bind('keypress', function (e) {
 });
 showlogin(); }); 
 
+function startLoginSpin() { loginSpinner.spin(loginTarget); } 
+function startRefreshSpin() { refreshSpinner.spin(refreshTarget); } 
+function stopLoginSpin() { loginSpinner.stop(); } 
+function stopRefreshSpin() { refreshSpinner.stop(); } 
+
 function login() {
-	//loginSubmit.style.visibility = 'hidden';
-	$('#loginCounter strong').text('Checking Password'); 
-	$('#loginCounter').show();
+	startLoginSpin();
 	encode();
 	$('#pwdInput').val('');
 	$.post('/door', {
@@ -35,9 +76,7 @@ function login() {
 	   pwd: pwd
 	}, function (data) {
 	   passfail(data);
-	   //loginSubmit.style.visibility = 'visible';
 	});
-	
 }
 
 function passfail(xml) {
@@ -61,11 +100,27 @@ function passfail(xml) {
             $('#loginCounter strong').text(count + '!');
         }
     }
+	stopLoginSpin();
 }
 
 function showlogin() {
     $('#loginPage').show();
     $('#pwdInput').focus();
+	setupLoginSpinner();
+	setupRefreshSpinner();
+	
+	stopLoginSpin();
+	stopRefreshSpin();
+}
+
+function setupLoginSpinner() {
+	loginTarget = document.getElementById('loginSubmit'); 
+	loginSpinner = new Spinner(loginOpts).spin(loginTarget);
+}
+
+function setupRefreshSpinner() {
+	refreshTarget = document.getElementById('refresh'); 
+	refreshSpinner = new Spinner(refreshOpts).spin(refreshTarget);
 }
 
 function encode() {
@@ -128,14 +183,14 @@ function process(xml) {
 }
 
 function status() {
-	refresh.style.visibility = 'hidden';
+	startRefreshSpin();
     window.scrollTo(0, 1);
     $.post('/door', {
         cmd: '7',
         pwd: pwd
     }, function (data) {
         process(data);
-		refresh.style.visibility = 'visible';
+		stopRefreshSpin();
     });
 	
 }

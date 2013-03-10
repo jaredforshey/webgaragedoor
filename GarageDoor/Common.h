@@ -71,29 +71,30 @@ void rightStatus() {
 }
 
 //*****************************ACTIVATE COMMAND***************************************
-int activateDoor(int *doorState, int action,  unsigned long *stateTimer, boolean closed, boolean open, int buttonOutput)  { //JARED
+int activateDoor(int *doorState, int action,  unsigned long *stateTimer, boolean closed, boolean opened, int buttonOutput)  { //JARED
   switch (*doorState) {
   case 0: //Default state.  If action is 1, begin opening door.  If action is 2, begin closing door.
+    digitalWrite(errorLED, LOW);
     if (action == 1) *doorState = 10; //Opening Door
     if (action == 2) *doorState = 50; //Closing Door
     *stateTimer = millis(); //entire process can take 20 seconds total
     break;
 
   case 10: //Door is idle.  If door not already open, trigger button, record timestamp, and move to next case.
-    if (open != true) { 
+    if (opened != true) { 
       digitalWrite(buttonOutput, HIGH);
       delay(500);
       digitalWrite(buttonOutput, LOW);
       delay(500);
       *doorState = 20;
     }
-    else if (open == true && closed == false) {
+    else if (opened == true && closed == false) {
       *doorState = 0;
     }
     break;
 
   case 20: //Door is moving.  Wait for open or closed.  If open, set case to 0.  If closed, set case to 10.   If timeout expired, return 1
-    if (open == true && closed == false) *doorState = 0;
+    if (opened == true && closed == false) *doorState = 0;
     else if (millis() - *stateTimer > 20000) *doorState = 100;
     else if (closed == true) *doorState = 10;
     break;
@@ -106,15 +107,15 @@ int activateDoor(int *doorState, int action,  unsigned long *stateTimer, boolean
       delay(500);
       *doorState =60;
     }
-    else if (open == false && closed == true) {
+    else if (opened == false && closed == true) {
       *doorState = 0;
     }
     break;
 
   case 60: //Door is moving.  Wait for open or closed.  If closed, set case to 0.  If oo, set case to 10.   If timeout expired, return 1
-    if (closed == true && open == false) *doorState = 0;
+    if (closed == true && opened == false) *doorState = 0;
     else if (millis() - *stateTimer > 20000) *doorState = 100;
-    else if (open == true) *doorState = 50;
+    else if (opened == true) *doorState = 50;
     break;
 
   case 100: //Shit's wrong.  If action == 3, the error is ack'd

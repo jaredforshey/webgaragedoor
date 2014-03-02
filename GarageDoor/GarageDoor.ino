@@ -3,7 +3,7 @@
 //                          DIRECTIVES
 //
 //***********************************************************************
-#define SHIELD_TYPE 1
+#define SHIELD_TYPE 2
 // ETHERNET = 0
 // WIFLY = 1
 // WIFI = 2
@@ -27,8 +27,15 @@ boolean Door2Open = false;
 boolean Door2Closed = false;
 
 int errorLED = 6; //error LED
-int ledPin =  7; // LED connected to digital pin 7
-int ledPin2 =  8; // LED connected to digital pin 8
+
+#if SHIELD_TYPE == 2
+int ledPin =  9; //The WiFi shield uses pin 7 for handshake with arduino -- cannot be used for Rev A of garage door opener board.
+#else
+int ledPin =  7; // Output connected to digital pin 7. Open/Close door.
+#endif
+
+int ledPin2 =  8; // Output connected to digital pin 8. Open/Close door.
+
 
 int cmd = 0; //command int 0= no cmd, 1=open, 2=close, 3=toggle, 4=open door 2, 5=close door 2, 6=toggle door 2, 7=get status, 8=Authenticate
 char pwd[16];
@@ -42,9 +49,6 @@ int openSensor2 = 4; // open sensor door 2
 
 int leftState = 0;
 int rightState = 0;
-
-const float analogHigh = 4.9;
-const float analogVoltageCoeff = 5.0 / 1023.0;
 
 int loginattempt = 0; //login attempt counter
 
@@ -60,6 +64,7 @@ int loginattempt = 0; //login attempt counter
 #include "SPI.h"
 //#include "SD.h"
 #include "EthernetSpecific.h"
+
 #elif SHIELD_TYPE == 1
 // Wifly Shield
 #include <SPI.h>
@@ -68,16 +73,21 @@ int loginattempt = 0; //login attempt counter
 #include "WiFly.h"
 #include "WiFlySpecific.h"
 
+#elif SHIELD_TYPE == 2
+// Wifi shield
+#include <SPI.h>
+#include <WiFi.h>
+#include "WiFiSpecific.h"
 #endif
 
 void setup() {
 
+  Serial.begin(9600);
+  //Serial.println("Serial Started");
+  
   pinMode(errorLED, OUTPUT);
   pinMode(ledPin, OUTPUT);
   pinMode(ledPin2, OUTPUT);
-
-  Serial.begin(57600);
-
 
   //Set internal pull-up resistors
   pinMode(openSensor1, INPUT);
@@ -101,6 +111,8 @@ void setup() {
   EthernetSetup();
 #elif SHIELD_TYPE == 1
   WiFlySetup();
+#elif SHIELD_TYPE == 2
+  WiFiSetup();
 #endif
 }
 
@@ -111,6 +123,8 @@ void loop() {
 #if SHIELD_TYPE == 0
   webserver.processConnection();
 #elif SHIELD_TYPE == 1
+  processConnection();  
+#elif SHIELD_TYPE == 2
   processConnection();  
 #endif
 
